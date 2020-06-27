@@ -7431,7 +7431,7 @@ class TestTorchDeviceType(TestCase):
             """
             Generates a diagonally-domimant matrix
             with the eigenvalues centered at 1
-            and the radius at most (n[-1] - 1) / (n[-2] ** 2)
+            and the radii at most (n[-1] - 1) / (n[-2] ** 2)
             """
             identity = torch.eye(n[-2], n[-1], dtype=dtype, device=device).expand(*n)
             x = torch.rand(*n, dtype=dtype, device=device) / (n[-1] ** 2)
@@ -7563,7 +7563,7 @@ class TestTorchDeviceType(TestCase):
             """
             Generates a diagonally-domimant matrix
             with the eigenvalues centered at 1
-            and the radius at most (n[-1] - 1) / (n[-2] ** 2)
+            and the radii at most (n[-1] - 1) / (n[-2] ** 2)
             """
             identity = torch.eye(n[-2], n[-1], dtype=dtype, device=device).expand(*n)
             x = torch.rand(*n, dtype=dtype, device=device) / (n[-1] ** 2)
