@@ -7417,6 +7417,25 @@ class TestTorchDeviceType(TestCase):
     @skipCUDAIfNoMagma
     @skipCPUIfNoLapack
     @dtypes(torch.float, torch.double)
+    def test_matrix_exp_boundary_cases(self, device, dtype):
+
+        with self.assertRaisesRegex(RuntimeError, "expected a tensor of floating types"):
+            torch.randn(3, 3).type(torch.int).matrix_exp()
+
+        with self.assertRaisesRegex(RuntimeError, "with dim at least 2"):
+            torch.randn(3).matrix_exp()
+
+        with self.assertRaisesRegex(RuntimeError, "expected a tensor of squared matrices"):
+            torch.randn(3, 2, 1).matrix_exp()
+
+        # check 1x1 matrices
+        x = torch.randn(3, 3, 1, 1)
+        mexp = x.matrix_exp()
+        self.assertEqual(mexp, x.exp())
+
+    @skipCUDAIfNoMagma
+    @skipCPUIfNoLapack
+    @dtypes(torch.float, torch.double)
     def test_matrix_exp_analytic(self, device, dtype):
         # check zero matrix
         x = torch.zeros(20, 20, dtype=dtype, device=device)
