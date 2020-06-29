@@ -7600,6 +7600,17 @@ class TestTorchDeviceType(TestCase):
 
             return res
 
+        def scale_square(a, deg):
+            if a.norm() < 1.0:
+                return get_taylor_approximation(a, 12)
+            else:
+                s = int(torch.log2(a.norm()).ceil().item())
+                b = a / (2 ** s)
+                b = get_taylor_approximation(b, 18)
+                for _ in range(s):
+                    b = torch.matmul(b, b)
+                return b
+
         def run_test(*n):
             degs = [1, 2, 4, 8, 12, 18]
             if dtype == torch.float:
@@ -7633,7 +7644,7 @@ class TestTorchDeviceType(TestCase):
                 x = normalize_to_1_operator_norm(x, sample_norm)
 
                 mexp = x.matrix_exp()
-                mexp_taylor = get_taylor_approximation(x, deg)
+                mexp_taylor = scale_square(x, deg)
 
                 self.assertEqual(mexp, mexp_taylor, atol=1e-2, rtol=0.0)
 
